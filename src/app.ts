@@ -1,0 +1,16 @@
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+
+const app = express();
+
+// TODO: Add only specific site to cors
+app.use(cors());
+
+app.use(morgan("combined"));
+
+app.use(express.json());
+
+// app.use('/v1', api);
+
+export default app;

@@ -1,0 +1,41 @@
+{
+  "name": "adhikrita-natural-oil",
+  "version": "1.0.0",
+  "description": "explore sequelize orm ",
+  "main": "build/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts",
+    "lint-and-fix": "eslint . --ext .ts --fix",
+    "build": "rimraf ./build && tsc",
+    "dev": "npx nodemon",
+    "start": "npm run build && node build/server.js",
+    "cluster": "npm run build && pm2 start build/server.js -i max",
+    "prepare": "husky install"
+  },
+  "author": "sachin-vedaraj",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.16",
+    "@types/morgan": "^1.9.4",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "eslint": "^8.33.0",
+    "husky": "^8.0.3",
+    "nodemon": "^2.0.20",
+    "rimraf": "^4.1.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helm": "^0.2.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.1.0",
+    "pm2": "^5.2.2"
+  }
+}
