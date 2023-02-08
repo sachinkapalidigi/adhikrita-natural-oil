@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
+    "debug": "tsc --sourcemap",
     "build": "rimraf ./build && tsc",
+    "service": "node ./build/server.js",
     "dev": "npx nodemon",
     "start": "npm run build && node build/server.js",
     "cluster": "npm run build && pm2 start build/server.js -i max",
@@ -26,7 +28,6 @@
     "husky": "^8.0.3",
     "nodemon": "^2.0.20",
     "rimraf": "^4.1.2",
-    "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   },
   "dependencies": {
@@ -34,6 +35,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "helm": "^0.2.1",
+    "joi": "^17.7.0",
+    "mongoose": "^6.9.1",
     "morgan": "^1.10.0",
     "mysql2": "^3.1.0",
     "pm2": "^5.2.2"
