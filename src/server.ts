@@ -5,7 +5,7 @@ dotenv.config();
 
 // Project modules
 import app from "./app";
-import sequelize from "./services/mysql";
+import { mongoConnect } from "./services/mongo";
 
 const PORT = process.env.PORT || 8001;
 
@@ -13,19 +13,10 @@ const PORT = process.env.PORT || 8001;
 const server = http.createServer(app);
 
 async function startServer() {
-  await sequelize.authenticate();
+  await mongoConnect();
 
   server.listen(PORT, () => {
     console.log(`Server started on PORT ${PORT}`);
-
-    // Untested
-    process.on("message", (message) => {
-      if (message == "shutdown") {
-        console.log("Shutting down server and closing all connections");
-        sequelize.close();
-        server.close();
-      }
-    });
   });
 }
 
