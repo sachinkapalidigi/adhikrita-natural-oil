@@ -1,16 +1,5 @@
+import { IProduct } from "../../utils/ModelTypes";
 import ProductsDB from "./products.mongo";
-
-interface ISku {
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface IProduct {
-  name: string;
-  skus: ISku[];
-  materials: string[];
-}
 
 async function addProduct(product: IProduct) {
   const products = new ProductsDB(Object.assign({}, product));
