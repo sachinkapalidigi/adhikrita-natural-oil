@@ -7,11 +7,11 @@ async function addProduct(product: IProduct) {
 }
 
 async function getProducts() {
-  return await ProductsDB.find({}, { _v: 0 });
+  return await ProductsDB.find({}, { __v: 0 });
 }
 
 async function getProduct(productId: string) {
-  return await ProductsDB.findById(productId);
+  return await ProductsDB.findById(productId, { __v: 0 });
 }
 
 async function updateProduct(productId: string, product: IProduct) {

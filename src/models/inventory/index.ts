@@ -1,5 +1,6 @@
 import InventoryDB from "./inventory.mongo";
 import { ISku } from "../../utils/ModelTypes";
+import { ClientSession } from "mongoose";
 
 async function addToInventory(productId: string, sku: ISku, quantity: number) {
   const addedInventory = await InventoryDB.findOneAndUpdate(
@@ -13,8 +14,8 @@ async function addToInventory(productId: string, sku: ISku, quantity: number) {
     },
     {
       projection: { __v: 0 },
-      upsert: true,
       returnDocument: "after",
+      upsert: true,
     }
   );
   return addedInventory;
@@ -23,19 +24,28 @@ async function addToInventory(productId: string, sku: ISku, quantity: number) {
 async function removeFromInventory(
   productId: string,
   sku: ISku,
-  quantity: number
+  quantity: number,
+  session?: ClientSession
 ) {
-  await InventoryDB.findOneAndUpdate(
+  const updated = await InventoryDB.findOneAndUpdate(
     { productId, "sku.name": sku.name },
     { $inc: { quantity: -1 * quantity } },
     {
       projection: { __v: 0 },
+      runValidators: true, // NOTE: This is not working.
+      session,
     }
   );
+  if (!updated) {
+    throw new Error("Inventory not found");
+  }
 }
 
 async function getInventory() {
-  const inventory = await InventoryDB.find({});
+  const inventory = await InventoryDB.find({}, { __v: 0 }).lean();
+  // .populate(
+  //   "productId"
+  // ); // simple if schema was correct
   return inventory;
 }
 

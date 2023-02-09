@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { startSession } from "mongoose";
-import { removeFromInventory } from "../../models/inventory";
 
+import { removeFromInventory } from "../../models/inventory";
+import { mongooseConnection } from "../../services/mongo";
 import {
   createSale,
   getAllSales,
@@ -11,25 +11,51 @@ import {
 import { IProductRef } from "../../utils/ModelTypes";
 
 async function httpCreateSale(req: Request, res: Response) {
-  const session = await startSession();
+  const session = await mongooseConnection.startSession();
   try {
     const reqBody = req.body;
-    session.startTransaction();
-    // Todo: transaction here, should reduce inventory size
-    const sale = await createSale(reqBody);
-    const { products } = reqBody;
-    // Remove from inventory
+    const { products, paymentDetails } = reqBody;
+    await session.startTransaction();
+    console.log("Starting transaction");
+    // TODO: move to utils
+    let totalAmount = 0;
     products.forEach((product: IProductRef) => {
-      removeFromInventory(product.productId, product.sku, product.quantity);
+      totalAmount += product.quantity * product.sku.price;
     });
-    session.commitTransaction();
-    session.endSession();
-    return res.status(201).json(sale);
-  } catch (error) {
-    session.abortTransaction();
+    const discount = Math.max(0, totalAmount - paymentDetails.paidAmount);
+    const sale = await createSale(
+      {
+        ...reqBody,
+        paymentDetails: {
+          ...paymentDetails,
+          totalAmount,
+          discount,
+        },
+      },
+      session
+    );
+    // Remove from inventory
+    await Promise.all(
+      products.map(async (product: IProductRef) => {
+        return await removeFromInventory(
+          product.productId,
+          product.sku,
+          product.quantity,
+          session
+        );
+      })
+    );
+    await session.commitTransaction();
+    res.status(201).json(sale);
+  } catch (err) {
+    console.log("Aborting transaction");
+    await session.abortTransaction();
     res.status(500).json({
-      error,
+      error: "Could not create sale",
     });
+  } finally {
+    console.log("Ending session of transaction");
+    await session.endSession();
   }
 }
 

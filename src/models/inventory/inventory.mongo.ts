@@ -14,6 +14,7 @@ const InventorySchema = new mongoose.Schema({
   quantity: {
     type: Number,
     required: true,
+    min: [0, "Inventory quantity must be greater than 0"], // NOTE: This is not woring.
   },
 });
 

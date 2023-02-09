@@ -1,9 +1,10 @@
+import { ClientSession } from "mongoose";
 import { ISale } from "../../utils/ModelTypes";
 import SalesDB from "./sales.mongo";
 
-async function createSale(sale: ISale) {
+async function createSale(sale: ISale, session?: ClientSession) {
   const salesDB = new SalesDB(sale);
-  return await salesDB.save();
+  return await salesDB.save({ session });
 }
 
 async function getSale(id: string) {

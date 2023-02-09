@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { addToInventory, getInventory } from "../../models/inventory";
-import { findByProductIdAndSku } from "../../models/products";
+import { findByProductIdAndSku, getProduct } from "../../models/products";
 
 async function httpAddToInventory(req: Request, res: Response) {
   try {
@@ -19,7 +19,17 @@ async function httpAddToInventory(req: Request, res: Response) {
 async function httpGetInventory(req: Request, res: Response) {
   try {
     const inventory = await getInventory();
-    res.status(200).send(inventory);
+    const inventoryWithProduct = await Promise.all(
+      inventory.map(async (item) => {
+        // Could have been avoided by using product instead of productId in schema
+        const product = await getProduct(item.productId.toString());
+        return {
+          ...item,
+          product,
+        };
+      })
+    );
+    res.status(200).send(inventoryWithProduct);
   } catch (error) {
     res.status(500).send(error);
   }

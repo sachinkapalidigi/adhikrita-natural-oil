@@ -5,7 +5,7 @@ const createSaleSchema = Joi.object().keys({
   products: Joi.array()
     .items(
       Joi.object().keys({
-        productId: Joi.number().required(),
+        productId: Joi.string().required(),
         sku: Joi.object().keys({
           name: Joi.string().required(),
           quantity: Joi.number().required(),
