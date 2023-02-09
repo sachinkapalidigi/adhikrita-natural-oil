@@ -49,6 +49,8 @@ async function httpUpdateProduct(req: Request, res: Response) {
     return;
   }
   try {
+    // TODO: update references of product id and sku in inventory
+    // Or: allow only admin to update product
     const updatedProduct = await updateProduct(productId, product);
     res.status(200).json(updatedProduct);
   } catch (error) {

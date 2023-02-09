@@ -36,8 +36,9 @@ async function httpCreateSale(req: Request, res: Response) {
 async function httpUpdateSale(req: Request, res: Response) {
   try {
     const { params, body } = req;
-    if (!params.id)
+    if (!params.id) {
       return res.status(400).json({ error: "Sale ID is required" });
+    }
     const sale = await updateSale(params.id, body);
     return res.status(200).json(sale);
   } catch (error) {

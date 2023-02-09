@@ -1,4 +1,4 @@
-import { IProduct } from "../../utils/ModelTypes";
+import { IProduct, ISku } from "../../utils/ModelTypes";
 import ProductsDB from "./products.mongo";
 
 async function addProduct(product: IProduct) {
@@ -23,4 +23,17 @@ async function updateProduct(productId: string, product: IProduct) {
   return savedProduct;
 }
 
-export { addProduct, getProducts, getProduct, updateProduct };
+async function findByProductIdAndSku(productId: string, sku: ISku) {
+  return await ProductsDB.findOne({
+    productId,
+    skus: { $elemMatch: { name: sku.name } },
+  });
+}
+
+export {
+  addProduct,
+  getProducts,
+  getProduct,
+  updateProduct,
+  findByProductIdAndSku,
+};
