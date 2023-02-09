@@ -9,18 +9,18 @@ import {
 } from "./products.controller";
 import { ProductsControllerSchema } from "./products.validation.schema";
 
-const productsApi = express.Router();
+const productsRouter = express.Router();
 
-productsApi.get("/", httpGetProducts);
+productsRouter.get("/", httpGetProducts);
 
-productsApi.post(
+productsRouter.post(
   "/",
   requestValidator(ProductsControllerSchema.createProductSchema),
   httpAddProduct
 );
 
-productsApi.get("/:id", httpGetProduct);
+productsRouter.get("/:id", httpGetProduct);
 
-productsApi.put("/:id", httpUpdateProduct);
+productsRouter.put("/:id", httpUpdateProduct);
 
-export default productsApi;
+export default productsRouter;

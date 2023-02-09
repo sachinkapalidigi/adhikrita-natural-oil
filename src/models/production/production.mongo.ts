@@ -26,7 +26,7 @@ const ProductionSchema = new mongoose.Schema({
   outputUnit: {
     type: String,
     required: true,
-    default: "litre",
+    default: "kg",
   },
 });
 

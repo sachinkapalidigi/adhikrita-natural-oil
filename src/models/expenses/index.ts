@@ -1,12 +1,7 @@
+import { IExpense } from "../../utils/ModelTypes";
 import ExpenseDB from "./expenses.mongo";
 
-interface IExpense {
-  date: Date;
-  description: string;
-  amount: number;
-}
-
-async function addExpense(expense: IExpense) {
+async function createExpense(expense: IExpense) {
   const newExpense = new ExpenseDB(Object.assign({}, expense));
   return await newExpense.save();
 }
@@ -14,20 +9,20 @@ async function addExpense(expense: IExpense) {
 // TODO: expenses with pagination + from/to dates
 // Check: Pagination with from/to dates. Total length between dates should not truncate.
 async function getExpenses() {
-  return await ExpenseDB.find({});
+  return await ExpenseDB.find({}, { __v: 0 });
 }
 
 async function getExpense(id: string) {
-  return await ExpenseDB.findById(id);
+  return await ExpenseDB.findById(id, { __v: 0 });
 }
 
-// Check: Does this update ID as well?
 async function updateExpense(expenseId: string, expense: IExpense) {
-  const updated = await ExpenseDB.updateOne(
-    { _id: expenseId },
-    Object.assign({}, expense)
-  );
-  return updated;
+  const updatedExpense = await ExpenseDB.findByIdAndUpdate(expenseId, expense, {
+    returnDocument: "after",
+    projection: { __v: 0 },
+  });
+
+  return updatedExpense;
 }
 
-export { addExpense, updateExpense, getExpenses, getExpense };
+export { createExpense, updateExpense, getExpenses, getExpense };
