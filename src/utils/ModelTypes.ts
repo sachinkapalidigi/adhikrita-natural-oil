@@ -32,3 +32,38 @@ export interface ICustomerProduction {
   unit?: string;
   paymentDetails: IPaymentInfo;
 }
+
+export interface IProduction {
+  date: Date;
+  material: string;
+  inputQuantity: number;
+  inputUnit?: string;
+  outputQuantity: number;
+  outputUnit?: string;
+}
+
+export interface ICustomerDetails {
+  name?: string;
+  email?: string;
+  phone?: string;
+  customerType: string;
+}
+
+export interface IProductRef {
+  productId: string;
+  sku: ISku;
+  quantity: number;
+}
+
+export interface ISale {
+  date: Date;
+  products: IProductRef[];
+  customer: ICustomerDetails;
+  paymentDetails: IPaymentInfo;
+}
+
+export interface IInventory {
+  productId: string;
+  quantity: number;
+  sku: ISku;
+}

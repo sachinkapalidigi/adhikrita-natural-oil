@@ -1,11 +1,35 @@
 import { Request, Response } from "express";
+import {
+  createProduction,
+  getProduction,
+  getProductions,
+  updateProduction,
+} from "../../models/production";
 
 async function httpCreateProduction(req: Request, res: Response) {
-  res.status(200).json({ message: "Production created" });
+  try {
+    const reqBody = req.body;
+    const production = await createProduction(reqBody);
+    return res.status(201).json(production);
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
 }
 
 async function httpUpdateProduction(req: Request, res: Response) {
-  res.status(200).json({ message: "Production updated" });
+  try {
+    const { params, body } = req;
+    if (!params.id)
+      return res.status(400).json({ error: "Production ID is required" });
+    const production = await updateProduction(params.id, body);
+    return res.status(200).json(production);
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
 }
 
 async function httpDeleteProduction(req: Request, res: Response) {
@@ -17,11 +41,31 @@ async function httpDeleteProduction(req: Request, res: Response) {
 }
 
 async function httpGetProduction(req: Request, res: Response) {
-  res.status(200).json({ message: "Production retrieved" });
+  try {
+    const {
+      params: { id },
+    } = req;
+    if (!id)
+      return res.status(400).json({ error: "Production ID is required" });
+    const production = await getProduction(id);
+    return res.status(200).json(production);
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
 }
 
 async function httpGetProductions(req: Request, res: Response) {
-  res.status(200).json({ message: "Productions retrieved" });
+  try {
+    // TODO: pagination, sorting, etc.
+    const productions = await getProductions();
+    return res.status(200).json(productions);
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
 }
 
 export {
