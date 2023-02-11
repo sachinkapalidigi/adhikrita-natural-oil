@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import SkuSchema from "../products/sku.schema";
 import PaymentInfoSchema from "./paymentInfo.schema";
 
-const ProductsSchema = new mongoose.Schema({
+const ProductRefSchema = new mongoose.Schema({
   productId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -40,7 +40,7 @@ const SalesSchema = new mongoose.Schema({
     required: true,
   },
   products: {
-    type: [ProductsSchema],
+    type: [ProductRefSchema],
     required: true,
   },
   customerDetails: {

@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 
 const MONGO_URL = process.env.MONGO_URL || "";
 
-mongoose.connection.on("open", () => {
+const mongooseConnection = mongoose.connection;
+
+mongooseConnection.on("open", () => {
   console.log("MongoDB connection ready!");
 });
 
-mongoose.connection.on("error", (err) => {
+mongooseConnection.on("error", (err) => {
   console.error(err);
 });
 
@@ -18,4 +20,4 @@ async function mongoDisconnect() {
   await mongoose.disconnect();
 }
 
-export { mongoConnect, mongoDisconnect };
+export { mongoConnect, mongoDisconnect, mongooseConnection };
