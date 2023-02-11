@@ -35,4 +35,10 @@ app.use(
 
 app.use("/v1", apiV1);
 
+app.use(function (req: Request, res: Response) {
+  return res.status(404).json({
+    message: "Page not found",
+  });
+});
+
 export default app;
