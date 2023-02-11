@@ -1,4 +1,6 @@
 import express from "express";
+import { authenticateToken } from "../middlewares/authValidator";
+import authRouter from "./auth/auth.router";
 import customerProductionRouter from "./customerProduction/customerProduction.router";
 import expensesRouter from "./expenses/expenses.router";
 import inventoryRouter from "./inventory/inventory.router";
@@ -9,16 +11,17 @@ import salesRouter from "./sales/sales.router";
 
 const api = express.Router();
 
-api.use("/products", productsRouter);
-api.use("/customer-productions", customerProductionRouter);
-api.use("/expenses", expensesRouter);
-api.use("/productions", productionRouter);
+api.use("/auth", authRouter);
+
+api.use("/products", authenticateToken, productsRouter);
+api.use("/customer-productions", authenticateToken, customerProductionRouter);
+api.use("/expenses", authenticateToken, expensesRouter);
+api.use("/productions", authenticateToken, productionRouter);
 
 // Inventory APIs
-api.use("/inventory", inventoryRouter);
+api.use("/inventory", authenticateToken, inventoryRouter);
 // Sales APIs
-api.use("/sales", salesRouter);
-// Users APIs
+api.use("/sales", authenticateToken, salesRouter);
 
 // Purchases API
 
